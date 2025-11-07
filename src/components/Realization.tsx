@@ -89,6 +89,14 @@ export default function Realization() {
 
        
       </div>
+
+      <div
+  className={`absolute bottom-8 inset-x-0 flex justify-center text-center text-rose-700 text-sm md:text-lg font-light transition-opacity duration-1000 ${
+    isVisible ? "opacity-100 animate-bounce" : "opacity-0"
+  }`}
+>
+  <p className="tracking-wide">⬇️ SCROLL ⬇️</p>
+</div>
       
     </section>
     
