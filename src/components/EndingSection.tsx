@@ -81,7 +81,7 @@ export const EndingSection = () => {
             late this time ❤️
           </h2>
           <p className="text-3xl md:text-4xl text-muted-foreground font-medium">
-            {/* See you soon :) */}
+            (Hopefully 🤞)
           </p>
         </motion.div>
 
