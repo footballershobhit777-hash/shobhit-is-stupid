@@ -48,7 +48,7 @@
 
 
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { LandingSection } from "@/components/LandingSection";
 import { ConfessionSection } from "@/components/ConfessionSection";
 import { AskSection } from "@/components/AskSection";
@@ -71,14 +71,30 @@ const Index = () => {
 
   const handleYes = () => {
     setCanScrollDown(true);
-
-    // wait a bit for new sections to mount, then scroll
     setTimeout(() => {
       requestAnimationFrame(() => {
         datePickerRef.current?.scrollIntoView({ behavior: "smooth" });
       });
-    }, 100);
+    }, 500); // small delay for smooth effect
   };
+
+  // Scroll lock logic
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!canScrollDown && askRef.current) {
+        const askBottom = askRef.current.getBoundingClientRect().bottom;
+        if (askBottom < window.innerHeight) {
+          window.scrollTo({
+            top: window.scrollY - (window.innerHeight - askBottom),
+            behavior: "instant",
+          });
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: false });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [canScrollDown]);
 
   return (
     <main className="scroll-smooth">
@@ -92,12 +108,10 @@ const Index = () => {
         <ConfessionSection />
       </div>
 
-      {/* The Ask section */}
       <div ref={askRef}>
         <AskSection onYes={handleYes} />
       </div>
 
-      {/* Render rest of sections only after “Yes” */}
       {canScrollDown && (
         <>
           <div ref={datePickerRef}>
@@ -109,20 +123,10 @@ const Index = () => {
           </div>
         </>
       )}
-
-      {/* Lock scroll below Ask until “Yes” */}
-      {!canScrollDown && (
-        <style jsx global>{`
-          body,
-          html {
-            overflow: hidden;
-            height: 100%;
-          }
-        `}</style>
-      )}
     </main>
   );
 };
 
 export default Index;
+
 
